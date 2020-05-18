@@ -4,11 +4,17 @@
 
 'use strict';
 
+
 const getKeys = new Promise((resolve) => {
   chrome.storage.sync.get('keywords', function(data) {
     resolve(data);
   });
 });
+
+const example = document.getElementById('keysExample');
+example.onclick = () => {
+  document.getElementById('keywords').value = example.innerText;
+}
 
 getKeys.then(keywords => {
   console.log(keywords)
@@ -23,3 +29,4 @@ function save() {
   chrome.storage.sync.set({keywords: keys});
   alert('Saved');
 }
+

@@ -2,6 +2,10 @@
 <html>
   <head>
     <style>
+      .link {
+        color: blue;
+        cursor: pointer;
+      }
     </style>
   </head>
   <body>
@@ -13,7 +17,7 @@
     <b>Local Storage keys to auto select</b><br>
     <p>
       Regular expression fot Local Storage keys to auto select - <i>one per line.</i><br>
-      <small>Example: <span class="link">.{3,}.(JWT|expireAt).*</span></small>
+      <small>Example: <span class="link" id="keysExample">.{3,}.(JWT|expireAt).*</span></small>
     </p>
     <textarea placeholder="Key list - one per list" rows="6" cols="50"  id="keywords"></textarea>
 
