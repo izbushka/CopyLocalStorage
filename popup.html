@@ -107,7 +107,6 @@
         #confirmation .container {
             border-radius: 10px;
             position: absolute;
-            top: 50%;
             left: 50%;
             margin-right: -50%;
             transform: translate(-50%, -50%);
@@ -199,6 +198,11 @@
                 <label for="item{{id}}">{{name}}</name>
             </div>
         </div>
+        {{/items}}
+        {{^items}}
+            <center>
+                Local Storage is empty
+            </center>
         {{/items}}
     </script>
 

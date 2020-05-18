@@ -5,13 +5,6 @@
 'use strict';
 /* global chrome */
 
-
-// let changeColor = document.getElementById('changeColor');
-
-// chrome.storage.sync.get('color', function(data) {
-//   changeColor.style.backgroundColor = data.color;
-//   changeColor.setAttribute('value', data.color);
-// });
 let monitoredKeys = [];
 let currentLocalStorage = [];
 let currentUrl = '';
@@ -27,9 +20,6 @@ const getPageLocalStorage = new Promise((resolve) => {
   });
 });
 
-// const getDomains = new Promise((resolve) => {
-//   chrome.storage.sync.get('domains', data => resolve(data))
-// });
 const getKeys = new Promise((resolve) => {
   chrome.storage.sync.get('keywords', data => resolve(data))
 });
@@ -40,8 +30,7 @@ Promise.all([
     getPageLocalStorage
 ]).then(results => {
   currentUrl = results[0];
-  monitoredKeys = results[1].keywords;
-  console.log(monitoredKeys, results);
+  monitoredKeys = results[1].keywords || [];
   let localStorageData = JSON.parse(results[2]);
 
   currentLocalStorage = localStorageData.reduce( (obj, item) => ({
@@ -59,7 +48,6 @@ function copyItems() {
     data: {},
     date: new Date().toISOString().slice(0, 19).replace('T', ' ')
   };
-  console.log(toSave);
   for (let i of checked) {
     const name = i.value;
     toSave.data[name] = currentLocalStorage[name];
@@ -163,7 +151,7 @@ function render() {
 
 function renderLocalStorage() {
   let tplData = Object.keys(currentLocalStorage).map((i, n) => ({
-    name: i,
+    name: i.trim(),
     id: n,
     selected: isKeyMonitored(i)
   })).sort((a, b) => +a.selected < +b.selected ? 1 : -1);
@@ -176,7 +164,7 @@ function renderLocalStorage() {
 
 function isKeyMonitored(key) {
   const curDomain = getDomain(true);
-  let match = monitoredKeys.some(i => key.indexOf(i) === (key.length - i.length));
+  let match = monitoredKeys.some(i => { const r = new RegExp(i); return key.match(r);});
   if (match && getDomain(false, key).includes('http')) {
     match = key.includes(curDomain);
   }
