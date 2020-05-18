@@ -55,6 +55,7 @@ function copyItems() {
 
   localStorage.setItem('savedItems', JSON.stringify(toSave));
   render();
+  showInfo({text: "Copied", timeout: 1000});
 }
 
 function pasteItems() {
@@ -93,7 +94,8 @@ function pasteItems() {
     addItemToPageLocalStorage(key, value);
   }
 
-  showSuccess();
+  render();
+  showInfo({text: "Done", refresh: true, timeout: 4000});
 }
 
 function getDomain(withPath, url) {
@@ -193,4 +195,21 @@ function refreshOrigin() {
   chrome.tabs.query({active:true}, function(tabs) {
     chrome.tabs.executeScript(tabs[0].id, {code: scriptCode});
   });
+}
+
+function showInfo(options) {
+  const container = document.getElementById('modalContainer');
+  const template = document.getElementById('modalTemplate').innerHTML;
+
+  container.innerHTML = Mustache.render(template, options);
+  container.classList.add('visible');
+
+  const refreshBtn = document.getElementById('refresh');
+  if (refreshBtn) {
+    refreshBtn.onclick = refreshOrigin;
+  }
+
+  setTimeout(() => {
+    container.classList.remove('visible');
+  }, options.timeout);
 }

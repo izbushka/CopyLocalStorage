@@ -95,7 +95,7 @@
         .row .name {
             flex-grow: 1;
         }
-        #confirmation {
+        .modal {
             display: none;
             position: absolute;
             top: 0;
@@ -104,7 +104,7 @@
             height: 100%;
             background: rgba(8, 8, 8, 0.69);
         }
-        #confirmation .container {
+        .modal .container {
             border-radius: 10px;
             position: absolute;
             left: 50%;
@@ -118,6 +118,10 @@
             top: 20%;
             margin: 0 auto;
         }
+        .modal.visible {
+            display: block;
+        }
+
         #refresh {
             margin-top: 20px;
             text-decoration: underline;
@@ -129,14 +133,7 @@
 <body>
 
     <div id="app"></div>
-
-
-    <div id="confirmation">
-        <div class="container">
-            Done<br>
-            <div id="refresh">Refresh page</div>
-        </div>
-    </div>
+    <div id="modalContainer" class="modal"></div>
 
     <script id="main" type="x-tmpl-mustache">
         <div class="header">
@@ -204,6 +201,15 @@
                 Local Storage is empty
             </center>
         {{/items}}
+    </script>
+
+    <script id="modalTemplate" type="x-tmpl-mustache">
+        <div class="container">
+            <div class="message">{{text}}</div>
+            {{#refresh}}
+                <div id="refresh">Refresh page</div>
+            {{/refresh}}
+        </div>
     </script>
 
     <script src="mustache.min.js"></script>
