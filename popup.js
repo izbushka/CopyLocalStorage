@@ -15,7 +15,7 @@ const getCurrentUrl = new Promise((resolve) => {
 
 const getPageLocalStorage = new Promise((resolve) => {
   let pageScript = 'JSON.stringify(Object.entries(localStorage));';
-  chrome.tabs.query({active: true}, function (tabs) {
+  chrome.tabs.query({active: true, lastFocusedWindow: true}, function (tabs) {
     chrome.tabs.executeScript(tabs[0].id, {code: pageScript}, (data) => resolve(data));
   });
 });
@@ -31,6 +31,7 @@ Promise.all([
 ]).then(results => {
   currentUrl = results[0];
   monitoredKeys = results[1].keywords || [];
+	console.log(results)
   let localStorageData = JSON.parse(results[2]);
 
   currentLocalStorage = localStorageData.reduce( (obj, item) => ({
@@ -39,7 +40,7 @@ Promise.all([
   }), {});
 
   render();
-})
+}).catch(e => console.log(e));
 
 function copyItems() {
   let checked = document.querySelectorAll('.selectedKey:checked');
@@ -176,7 +177,7 @@ function isKeyMonitored(key) {
 function addItemToPageLocalStorage(key, value) {
   const scriptCode = `localStorage.setItem('${key}', '${value}');`;
   console.log(`Running ${scriptCode} on this page`);
-  chrome.tabs.query({active:true}, function(tabs) {
+  chrome.tabs.query({active:true, lastFocusedWindow: true}, function(tabs) {
     chrome.tabs.executeScript(tabs[0].id, {code: scriptCode});
   });
 }
@@ -192,7 +193,7 @@ function showSuccess() {
 function refreshOrigin() {
   const scriptCode = `window.location.href="${getDomain(false)}";`;
   console.log(`Running ${scriptCode} on this page`);
-  chrome.tabs.query({active:true}, function(tabs) {
+  chrome.tabs.query({active:true, lastFocusedWindow: true}, function(tabs) {
     chrome.tabs.executeScript(tabs[0].id, {code: scriptCode});
   });
 }
