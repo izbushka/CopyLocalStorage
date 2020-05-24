@@ -6,7 +6,7 @@
 
 
 const getKeys = new Promise((resolve) => {
-  chrome.storage.sync.get('keywords', function(data) {
+  chrome.storage.local.get('keywords', function(data) {
     resolve(data);
   });
 });
@@ -16,17 +16,17 @@ example.onclick = () => {
   document.getElementById('keywords').value = example.innerText;
 }
 
-getKeys.then(keywords => {
-  console.log(keywords)
-  if (keywords?.keywords) {
-    document.getElementById('keywords').value = keywords.keywords.join("\n");
+getKeys.then(data => {
+  console.log(data)
+  if (data?.keywords) {
+    document.getElementById('keywords').value = data.keywords.join("\n");
   }
   document.getElementById('save').onclick = save;
 })
 
 function save() {
   const keys = document.getElementById('keywords').value.split("\n").map(i => i.trim()).filter(Boolean);
-  chrome.storage.sync.set({keywords: keys});
+  chrome.storage.local.set({keywords: keys});
   alert('Saved');
 }
 

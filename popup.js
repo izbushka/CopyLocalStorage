@@ -21,7 +21,7 @@ const getPageLocalStorage = new Promise((resolve) => {
 });
 
 const getKeys = new Promise((resolve) => {
-  chrome.storage.sync.get('keywords', data => resolve(data))
+  chrome.storage.local.get('keywords', data => resolve(data))
 });
 
 Promise.all([

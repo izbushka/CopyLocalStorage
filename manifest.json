@@ -1,6 +1,6 @@
 {
   "name": "Copy Local Storage",
-  "version": "1.4",
+  "version": "1.5",
   "description": "Helps view and copy Local Storage items between your web sites",
   "permissions": ["activeTab", "storage"],
   "options_page": "options.html",
@@ -14,6 +14,10 @@
       "64": "images/get_started64.png",
       "128": "images/get_started128.png"
     }
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
   },
   "icons": {
     "16": "images/get_started16.png",
