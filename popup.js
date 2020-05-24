@@ -30,8 +30,11 @@ Promise.all([
     getPageLocalStorage
 ]).then(results => {
   currentUrl = results[0];
+  if (currentUrl.includes('chrome://')) {
+    throw "Page is not supported";
+  }
+
   monitoredKeys = results[1].keywords || [];
-	console.log(results)
   let localStorageData = JSON.parse(results[2]);
 
   currentLocalStorage = localStorageData.reduce( (obj, item) => ({
@@ -104,7 +107,7 @@ function getDomain(withPath, url) {
     url = currentUrl;
   }
   if (withPath) {
-    return url.replace(/(https?:\/\/[^\/]+(\/[^\/]+)?(\/[^\/]+)?).*/, "$1");
+    return url.replace(/(https?:\/\/[^\/]+(\/[^\/]+)?(\/[^\/]+\/)?).*/, "$1");
   } else {
     return url.replace(/(https?:\/\/[^\/]+).*/, "$1");
   }
@@ -182,14 +185,6 @@ function addItemToPageLocalStorage(key, value) {
   });
 }
 
-function showSuccess() {
-  const confirmation = document.getElementById('confirmation');
-  confirmation.style.display = 'block';
-  document.getElementById('refresh').onclick = refreshOrigin;
-  setTimeout(() => {
-    confirmation.style.display = 'none';
-  }, 4000);
-}
 function refreshOrigin() {
   const scriptCode = `window.location.href="${getDomain(false)}";`;
   console.log(`Running ${scriptCode} on this page`);
