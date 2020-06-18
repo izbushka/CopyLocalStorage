@@ -7,6 +7,7 @@
 
 let monitoredKeys = [];
 let currentLocalStorage = [];
+let currentLocalhostTabs = [];
 let currentUrl = '';
 
 const getCurrentUrl = new Promise((resolve) => {
@@ -20,6 +21,14 @@ const getPageLocalStorage = new Promise((resolve) => {
   });
 });
 
+const getLocalhostTabs = new Promise((resolve) => {
+  chrome.tabs.query({url: 'http://localhost/*'}, function (tabs) {
+    resolve(tabs);
+    // chrome.tabs.update(tabs[0].id, {active: true}, () => console.log('done'));
+    // chrome.window.update(tabs[0].windowId, {drawAttention: true, focused: true}, () => console.log('done'));
+  });
+});
+
 const getKeys = new Promise((resolve) => {
   chrome.storage.local.get('keywords', data => resolve(data))
 });
@@ -27,7 +36,8 @@ const getKeys = new Promise((resolve) => {
 Promise.all([
     getCurrentUrl,
     getKeys,
-    getPageLocalStorage
+    getPageLocalStorage,
+    getLocalhostTabs
 ]).then(results => {
   currentUrl = results[0];
   if (currentUrl.includes('chrome://')) {
@@ -35,12 +45,16 @@ Promise.all([
   }
 
   monitoredKeys = results[1].keywords || [];
-  let localStorageData = JSON.parse(results[2]);
+  let localStorageData = [];
+  try {
+    localStorageData = JSON.parse(String(results[2]));
+  } catch (e) {}
 
   currentLocalStorage = localStorageData.reduce( (obj, item) => ({
     ...obj,
     [item[0]]: item[1]
   }), {});
+  currentLocalhostTabs = results[3];
 
   render();
 }).catch(e => console.log(e));
@@ -153,6 +167,7 @@ function render() {
   }
 
   renderLocalStorage();
+  // renderLocalhostTabs();
 }
 
 function renderLocalStorage() {
@@ -166,6 +181,14 @@ function renderLocalStorage() {
   const template = document.getElementById('itemList').innerHTML;
 
   container.innerHTML = Mustache.render(template, {items: tplData});
+}
+
+function renderLocalhostTabs() {
+  let tplData = currentLocalhostTabs;
+  const container = document.getElementById('tabs');
+  const template = document.getElementById('localhostTabsTemplate').innerHTML;
+
+  container.innerHTML = Mustache.render(template, {tabs: tplData});
 }
 
 function isKeyMonitored(key) {

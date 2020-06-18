@@ -47,7 +47,7 @@
             border: 1px dotted #a0a0a0;
             padding: 5px;
         }
-        .options .button {
+        .button.green {
             background: #5dfc3d;
             color: black;
         }
@@ -94,6 +94,13 @@
         }
         .row .name {
             flex-grow: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .row .action {
+            white-space: nowrap;
+            padding: 2px;
         }
         .modal {
             display: none;
@@ -155,7 +162,7 @@
                     <div class="title">
                         Paste options
                     </div>
-                    <div class="button" id="paste">Paste</div>
+                    <div class="button green" id="paste">Paste</div>
 
                     <div class="cell">
                         <div class='title'>Domain</div>
@@ -210,6 +217,19 @@
                 <div id="refresh">Refresh page</div>
             {{/refresh}}
         </div>
+    </script>
+    <script id="localhostTabsTemplate" type="x-tmpl-mustache">
+        <div class="title">Localhost Tabs</div>
+        {{#tabs}}
+        <div class="row">
+            <div class="name">
+                <label for="{{id}}">{{title}} {{url}}</name>
+            </div>
+            <div class="action">
+                <div class="button green" id="pasteTo{{id}}">Copy here</name>
+            </div>
+        </div>
+        {{/tabs}}
     </script>
 
     <script src="mustache.min.js"></script>
