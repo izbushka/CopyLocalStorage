@@ -1,6 +1,6 @@
 {
   "name": "Copy Local Storage",
-  "version": "1.5",
+  "version": "1.6",
   "description": "Helps view and copy Local Storage items between your web sites",
   "permissions": ["activeTab", "storage"],
   "options_page": "options.html",

@@ -35,12 +35,17 @@ Promise.all([
   }
 
   monitoredKeys = results[1].keywords || [];
-  let localStorageData = JSON.parse(results[2]);
 
-  currentLocalStorage = localStorageData.reduce( (obj, item) => ({
-    ...obj,
-    [item[0]]: item[1]
-  }), {});
+  try {
+    let localStorageData = JSON.parse(String(results[2]));
+    currentLocalStorage = localStorageData.reduce( (obj, item) => ({
+      ...obj,
+      [item[0]]: item[1]
+    }), {});
+  } catch (e) {
+    currentLocalStorage = [];
+  }
+
 
   render();
 }).catch(e => console.log(e));
