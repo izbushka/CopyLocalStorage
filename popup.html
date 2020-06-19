@@ -183,6 +183,7 @@
                 </div>
             {{/copied}}
         </div>
+        <div class="list" id="tabs"></div>
         <div class="list" id="items"></div>
     </script>
     <script id="itemList" type="x-tmpl-mustache">
@@ -226,7 +227,7 @@
                 <label for="{{id}}">{{title}} {{url}}</name>
             </div>
             <div class="action">
-                <div class="button green" id="pasteTo{{id}}">Copy here</name>
+                <div class="button green pasteTo" data-id="{{id}}">Copy here</name>
             </div>
         </div>
         {{/tabs}}
