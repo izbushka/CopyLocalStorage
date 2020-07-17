@@ -159,19 +159,20 @@
 
                     <div class="cell">
                         <div class='title'>Domain</div>
-                        <input type="radio" name="domain" {{settings.domain.keep}} value="keep"> keep<br>
                         <input type="radio" name="domain" {{settings.domain.remove}} value="remove"> remove<br>
-                        <input type="radio" name="domain" {{settings.domain.replace}} value="replace"> replace
+                        <input type="radio" name="domain" {{settings.domain.replace}} value="replace"> replace<br>
+                        <input type="radio" name="domain" {{settings.domain.keep}} value="keep"> keep
                     </div>
                     <div class="cell">
                         <div class='title'>Quotes</div>
-                        <input type="radio" name="quotes" value="keep"> keep<br>
-                        <input type="radio" name="quotes" checked value="remove"> remove
+                        <input type="radio" name="quotes" {{settings.quotes.remove}} value="remove"> remove<br>
+                        <input type="radio" name="quotes" {{settings.quotes.keep}} value="keep"> keep<br>
                     </div>
                     <div class="cell">
                         <div class='title'>Path</div>
-                        <input type="radio" name="path" value="keep"> keep<br>
-                        <input type="radio" name="path" checked value="remove"> remove
+                        <input type="radio" name="path" {{settings.path.remove}} value="remove"> remove<br>
+                        <input type="radio" name="path" {{settings.path.replace}} value="replace"> replace<br>
+                        <input type="radio" name="path" {{settings.path.keep}} value="keep"> keep<br>
                     </div>
                 </div>
             {{/copied}}

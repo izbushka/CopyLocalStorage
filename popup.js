@@ -78,9 +78,9 @@ function pasteItems() {
     const path = document.querySelector('input[name=path]:checked').value;
 
     const pasteSettings = {
-        quotes: quotes,
-        domain: domain,
-        path: path
+        quotes,
+        domain,
+        path
     };
 
     localStorage.setItem('pasteSettings', JSON.stringify(pasteSettings));
@@ -103,21 +103,30 @@ function pasteItems() {
             } else {
                 key = key.replace(/.*\//, '/');
             }
+        } else if (path === 'replace') {
+            let curPath = getCurPath();
+            if (key.match(/https?:\/\//)) { // has domain
+                key = key.replace(/(https?:\/\/[^\/]+\/).*\//, '$1' + curPath);
+            } else {
+                key = key.replace(/.*\//, '/' + curPath);
+            }
         }
         addItemToPageLocalStorage(key, value);
     }
 
     render();
     getAutoRefresh.then(autoRefresh => {
-        console.log('refr state', autoRefresh);
         if (autoRefresh) {
             showInfo({text: "Done<br>Refreshing page...", refresh: false, timeout: 4000});
-            refreshOrigin();
+            refreshOrigin(path === 'replace' ? '/' + getCurPath() : '');
             setTimeout(() => window.close(), 1000);
             return;
         }
         showInfo({text: "Done", refresh: true, timeout: 4000});
     });
+}
+function getCurPath() {
+    return currentUrl.replace(/(https?:\/\/[^\/]+\/)([^\/]+\/[^\/]+\/).*/, '$2');
 }
 
 function getDomain(withPath, url) {
@@ -206,8 +215,8 @@ function addItemToPageLocalStorage(key, value) {
     });
 }
 
-function refreshOrigin() {
-    const scriptCode = `window.location.href="${getDomain(false)}";`;
+function refreshOrigin(subpath) {
+    const scriptCode = `window.location.href="${getDomain(false)}${subpath}";`;
     console.log(`Running ${scriptCode} on this page`);
     chrome.tabs.query({active: true, lastFocusedWindow: true}, function (tabs) {
         chrome.tabs.executeScript(tabs[0].id, {code: scriptCode});
